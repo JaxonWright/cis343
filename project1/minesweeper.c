@@ -1,7 +1,7 @@
 /************************************************************************
  * minesweeper.c							*
  *									*
- * Author(s): Jaxon Wright, Chad Teitsma				*
+ * Author(s): Jaxon Wright, Chad Teitsma  				*
  ***********************************************************************/
 
 #include <stdbool.h>
