@@ -14,17 +14,17 @@
 #define PCT_MINES_MIN 10
 #define PCT_MINES_MAX 70
 
-#define RCN_COLOR	"\x1b[38;2;180;180;180m"
-#define MIN_COLOR	"\x1b[31m"
-#define ZER_COLOR   "\x1b[36m"
-#define ONE_COLOR	"\x1b[38;2;156;122;255m"
-#define TWO_COLOR 	"\x1b[38;2;95;171;97m"
-#define THR_COLOR	"\x1b[38;2;255;118;109m"
-#define FOU_COLOR 	"\x1b[38;2;115;105;189m"
-#define FIV_COLOR	"\x1b[38;2;184;93;90m"
-#define SIX_COLOR	"\x1b[38;2;67;144;146m"
-#define SEV_COLOR	"\x1b[38;2;191;238;124m"
-#define EIG_COLOR	"\x1b[38;2;255;171;251m"
+#define RCN_COLOR	"\033[38;5;245m"
+#define MIN_COLOR	"\033[38;5;160m"
+#define ZER_COLOR   "\033[38;5;248m"
+#define ONE_COLOR	"\033[38;5;98m"
+#define TWO_COLOR 	"\033[38;5;70m"
+#define THR_COLOR	"\033[38;5;209m"
+#define FOU_COLOR 	"\033[38;5;111m"
+#define FIV_COLOR	"\033[38;5;209m"
+#define SIX_COLOR	"\033[38;5;153m"
+#define SEV_COLOR	"\033[38;5;115m"
+#define EIG_COLOR	"\033[38;5;134m"
 #define CLE_COLOR	"\x1b[39;49m"
 
 typedef struct {
