@@ -28,7 +28,7 @@ typedef enum {WON, LOST, INPROGRESS} Status;
  ************************************************************************/
 
 /************************************************************************
- * Function declarations/prototypes					*
+ * Function declarations/prototypes										*
  ************************************************************************/
 void displayMenu();
 
@@ -52,13 +52,13 @@ Status selectCell(int row, int col, int size, Cell board[][size]);
 
 int nbrVisibleCells(int size, Cell board[][size]);
 
-void setImmediateNeighborCellsVisible(int row, int col, int size, Cell board[][size]);
+//void setImmediateNeighborCellsVisible(int row, int col, int size, Cell board[][size]);
 
 void setAllNeighborCellsVisible(int row, int col, int size, Cell board[][size]);
 
 
 /************************************************************************
- * Main driver of the program. Uses the functions defined above.	*
+ * Main driver of the program. Uses the functions defined above.		*
  ************************************************************************/
 int main()
 {
@@ -67,7 +67,14 @@ int main()
 	bool displayMines = false;
 	Status gameState = INPROGRESS;
 
-	printf("!!!!!WELCOME TO THE MINESWEEPER GAME!!!!!\n\n");
+	printf("************************************************************************************************************************\n");
+	printf("* _|      _|  _|_|_|  _|      _|  _|_|_|_|    _|_|_|  _|          _|  _|_|_|_|  _|_|_|_|  _|_|_|    _|_|_|_|  _|_|_|   *\n");
+	printf("* _|_|  _|_|    _|    _|_|    _|  _|        _|        _|          _|  _|        _|        _|    _|  _|        _|    _| *\n");
+	printf("* _|  _|  _|    _|    _|  _|  _|  _|_|_|      _|_|    _|    _|    _|  _|_|_|    _|_|_|    _|_|_|    _|_|_|    _|_|_|   *\n");
+	printf("* _|      _|    _|    _|    _|_|  _|              _|    _|  _|  _|    _|        _|        _|        _|        _|    _| *\n");
+	printf("* _|      _|  _|_|_|  _|      _|  _|_|_|_|  _|_|_|        _|  _|      _|_|_|_|  _|_|_|_|  _|        _|_|_|_|  _|    _| *\n");
+	printf("* a game by jaxon wright and chad teitsma                                                                              *\n");
+	printf("************************************************************************************************************************\n\n");
 	size = getBoardSize();
 
 	// declare 2D array of cells
@@ -147,7 +154,7 @@ int main()
 }
 
 /************************************************************************
- * Displays list of commands allowed at the prompt			*
+ * Displays list of commands allowed at the prompt						*
  ************************************************************************/
 void displayMenu()
 {
@@ -161,135 +168,262 @@ void displayMenu()
 }
 
 /************************************************************************
- * Initializes the fields of each cell on the board as follows:		*
- * 		is_mine field to false					*
- * 		mines field to 0					*
- * 		visible field to false					*
+ * Initializes the fields of each cell on the board as follows:			*
+ * 		is_mine field to false											*
+ * 		mines field to 0												*
+ * 		visible field to false											*
  ************************************************************************/
 void initBoard(int size, Cell board[][size])
 {
-	// TO DO
+	for (int i = 0; i < size; i++){
+		for (int j = 0; j < size; j++){
+			Cell cell;
+			
+			cell.is_mine = false;
+			cell.mines = 0;
+			cell.visible = false;
+			
+			board[i][j] = cell;
+		}
+	}
 }
 
 /************************************************************************
- * Places the specified number of mines randomly on the board		*
+ * Places the specified number of mines randomly on the board			*
  ************************************************************************/
-void placeMinesOnBoard(int size, Cell board[][size], int nbrMines)
-{
-	// TO DO
+void placeMinesOnBoard(int size, Cell board[][size], int nbrMines){
+	srand(time(NULL));
+	int x, y;
+	int count = 0;
+	
+	while (count < nbrMines){
+		x = rand()%(size);
+		y = rand()%(size);
+		
+		//if there is not a mine already at the randomly generated spot then 
+		//put one there
+		if(!board[x][y].is_mine){
+			board[x][y].is_mine = true;
+			count++;
+		}
+	}
 }
 
 /************************************************************************
  * For each non-mine cell on the board, set the "mines" field to the	*
- * number of mines in the immediate neighborhood.			*
+ * number of mines in the immediate neighborhood.						*
  ************************************************************************/
-void fillInMineCountForNonMineCells(int size, Cell board[][size])
-{
-	// TO DO
+void fillInMineCountForNonMineCells(int size, Cell board[][size]) {
+	for (int i = 0; i < size; i++){
+		for (int j = 0; j < size; j++){
+			if(!board[i][j].is_mine)
+				board[i][j].mines = getNbrNeighborMines(i,j,size,board);
+		}
+	}
 }
 
 /************************************************************************
- * Counts and returns the number of mines on the board			*
+ * Counts and returns the number of mines on the board					*
  ************************************************************************/
-int nbrOfMines(int size, Cell board[][size])
-{
+int nbrOfMines(int size, Cell board[][size]) {
 	int count = 0;
 	
-	// TO DO
+	for (int i = 0; i < size; i++){
+		for (int j = 0; j < size; j++){
+			if (board[i][j].is_mine)
+				count++;
+		}
+	}
 
 	return count;
 }
 
 /************************************************************************
  * Returns the number of mines in the immediate neighborhood of a cell	*
- * at location (row,col) on the board.					*
+ * at location (row,col) on the board.									*
  ************************************************************************/
-int getNbrNeighborMines(int row, int col, int size, Cell board[][size])
-{
+int getNbrNeighborMines(int row, int col, int size, Cell board[][size]) {
 	int count = 0;
-
-	// TO DO
+	
+	//check left
+	if (col > 0 && board[row][col-1].is_mine){
+		count++;
+	}
+	//check diag up left
+	if ((col > 0 && row > 0) && board[row-1][col-1].is_mine){
+		count++;
+	}
+	//check above
+	if (row > 0 && board[row-1][col].is_mine){
+		count++;
+	}
+	//check diag up right
+	if ((row > 0 && col < size-1) && board[row-1][col+1].is_mine){
+		count++;
+	}
+	//check right
+	if (col < size-1 && board[row][col+1].is_mine){
+		count++;
+	}
+	//check diag down right
+	if ((row < size-1 && col < size-1) && board[row+1][col+1].is_mine){
+		count++;
+	}
+	//check below
+	if (row < size-1 && board[row+1][col].is_mine){
+		count++;
+	}
+	//check diag down left
+	if ((row < size-1 && col > 0) && board[row+1][col-1].is_mine){
+		count++;
+	}
 	
 	return count;
 }
 
 /************************************************************************
- * Displays the board. If a cell is not currently visible and has a	*
+ * Displays the board. If a cell is not currently visible and has a		*
  * mine, show the mine if the displayMines is true. Used for debugging	*
- * and testing purposes.						*
+ * and testing purposes.												*
  ************************************************************************/
-void displayBoard(int size, Cell board[][size], bool displayMines)
-{
-	// TO DO
+void displayBoard(int size, Cell board[][size], bool displayMines) {	
+	//Print top row, displaying column numbers
+	printf("\t");
+	for (int i=1; i <= size; i++)
+		printf("\x1b[35;1m%d\t",i);
+	
+	printf("\x1b[39;49m\n");
+	//print row numbers and rest of board
+	for (int i=0; i < size; i++){
+		//Stuff is getting colored lulz
+		printf("\x1b[35;1m%d\t\x1b[39;49m",i+1);
+		for (int j=0; j < size; j++){
+			if(board[i][j].is_mine && displayMines)
+				printf("\x1b[31;1m*\x1b[39;49m\t");
+			else if (board[i][j].visible)
+				printf("\x1b[33;1m%d\x1b[39;49m\t",board[i][j].mines);
+			else
+				printf("?\t");
+		}	
+		printf("\n");
+	}
+	
 }
 
 /************************************************************************
- * Prompts the user for board size, reads and validates the input	*
- * entered, and returns the integer if it is within valid range.	*
- * repeats this in a loop until the user enters a valid value.		*
+ * Prompts the user for board size, reads and validates the input		*
+ * entered, and returns the integer if it is within valid range.		*
+ * repeats this in a loop until the user enters a valid value.			*
  ************************************************************************/
-int getBoardSize()
-{
+int getBoardSize() {
 	int size = 0;
 
-	// TO DO
+	printf("Enter the board size ( %d to %d ): ", BOARD_SIZE_MIN, BOARD_SIZE_MAX); 
+	
+	//scans from user input to character array
+	char board_size[50];
+  	fgets(board_size,50,stdin);
+  	//convert from char array to integer. If it is not a number returns a negative int
+  	size = atoi(board_size);
 
+	if (size < BOARD_SIZE_MIN || size > BOARD_SIZE_MAX){
+		printf("Invalid input.\n");
+		size = getBoardSize();
+	}
 	return size;
 }
 
 /************************************************************************
- * Prompts the user for percentage of mines to place on the board,	*
+ * Prompts the user for percentage of mines to place on the board,		*
  * reads and validates the input entered, and returns the integer if it	*
  * is within valid range. repeats this in a loop until the user enters	*
- * a valid value for board size.					*
+ * a valid value for board size.										*
  ************************************************************************/
-int getPercentMines()
-{
+int getPercentMines() {
 	int percent = 0;
 
-	// TO DO
+	printf("Enter the percentage of mines on the board ( %d to %d ): ", PCT_MINES_MIN, PCT_MINES_MAX); 
+	
+	//scans from user input to character array
+	char board_size[50];
+  	fgets(board_size,50,stdin);
+  	//convert from char array to integer. If it is not a number returns a negative int
+  	percent = atoi(board_size);
 
+	if (percent < PCT_MINES_MIN|| percent > PCT_MINES_MAX){
+		printf("Invalid input.\n");
+		percent = getPercentMines();
+	}
 	return percent;
 }
 
 /************************************************************************
- * Process cell selection by user during the game			*
+ * Process cell selection by user during the game						*
  ************************************************************************/
-Status selectCell(int row, int col, int size, Cell board[][size])
-{
-	// TO DO
+Status selectCell(int row, int col, int size, Cell board[][size]){
+	
+	board[row][col].visible = true;
+	
+	if (board[row][col].is_mine){
+		return LOST;
+	}
+	if (board[row][col].mines == 0) {
+		setAllNeighborCellsVisible(row, col, size, board);
+	}
+	if(nbrOfMines(size, board) + nbrVisibleCells(size, board) == size*size) {
+		return WON;
+	}
 
 	return INPROGRESS;
 }
 
 /************************************************************************
- * Returns the number of cells that are currently visible.		*
+ * Returns the number of cells that are currently visible.				*
  ************************************************************************/
-int nbrVisibleCells(int size, Cell board[][size])
-{
+int nbrVisibleCells(int size, Cell board[][size]){
 	int count = 0;
 
-	// TO DO
+	for (int i = 0; i < size; i++){
+		for (int j = 0; j < size; j++){
+			if (board[i][j].visible)
+				count++;
+		}
+	}
 	
 	return count;
 }
 
 /************************************************************************
  * If the mine count of a cell at location (row,col) is zero, then make	*
- * the cells ONLY in the immediate neighborhood visible.		*
- ************************************************************************/
-void setImmediateNeighborCellsVisible(int row, int col, int size, Cell board[][size])
-{
-	// TO DO
-}
-
-/************************************************************************
- * If the mine count of a cell at location (row,col) is zero, then make	*
- * the cells in the immediate neighborhood visible and repeat this	*
+ * the cells in the immediate neighborhood visible and repeat this		*
  * process for each of the cells in this set of cells that have a mine	*
- * count of zero, and so on.						*
+ * count of zero, and so on.											*
  ************************************************************************/
-void setAllNeighborCellsVisible(int row, int col, int size, Cell board[][size])
-{
-	// TO DO
+void setAllNeighborCellsVisible(int row, int col, int size, Cell board[][size]){
+	
+	//check left
+	if (col > 0 && !board[row][col-1].visible)
+		selectCell(row, col-1, size, board);
+	//check diag up left
+	if ((col > 0 && row > 0) && !board[row-1][col-1].visible)
+		selectCell(row-1, col-1, size, board);
+	//check above
+	if (row > 0 && !board[row-1][col].visible)
+		selectCell(row-1, col, size, board);
+	//check diag up right
+	if ((row > 0 && col < size-1) && !board[row-1][col+1].visible)
+		selectCell(row-1, col+1, size, board);
+	//check right
+	if (col < size-1 && !board[row][col+1].visible)
+		selectCell(row, col+1, size, board);
+	//check diag down right
+	if ((row < size-1 && col < size-1) && !board[row+1][col+1].visible)
+		selectCell(row+1, col+1, size, board);
+	//check below
+	if (row < size-1 && !board[row+1][col].visible)
+		selectCell(row+1, col, size, board);
+	//check diag down left
+	if ((row < size-1 && col > 0) && !board[row+1][col-1].visible)
+		selectCell(row+1, col-1, size, board);
+	
 }
