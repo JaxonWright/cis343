@@ -1,7 +1,7 @@
 /************************************************************************
- * minesweeper.c							*
- *									*
- * Author(s): Jaxon Wright, Chad Teitsma  				*
+ * minesweeper.c														*
+ *																		*
+ * Author(s): Jaxon Wright, Chad Teitsma  								*
  ***********************************************************************/
 
 #include <stdbool.h>
@@ -13,6 +13,19 @@
 #define BOARD_SIZE_MAX 15
 #define PCT_MINES_MIN 10
 #define PCT_MINES_MAX 70
+
+#define RCN_COLOR	"\x1b[38;2;180;180;180m"
+#define MIN_COLOR	"\x1b[31m"
+#define ZER_COLOR   "\x1b[36m"
+#define ONE_COLOR	"\x1b[38;2;156;122;255m"
+#define TWO_COLOR 	"\x1b[38;2;95;171;97m"
+#define THR_COLOR	"\x1b[38;2;255;118;109m"
+#define FOU_COLOR 	"\x1b[38;2;115;105;189m"
+#define FIV_COLOR	"\x1b[38;2;184;93;90m"
+#define SIX_COLOR	"\x1b[38;2;67;144;146m"
+#define SEV_COLOR	"\x1b[38;2;191;238;124m"
+#define EIG_COLOR	"\x1b[38;2;255;171;251m"
+#define CLE_COLOR	"\x1b[39;49m"
 
 typedef struct {
 	bool is_mine;
@@ -30,6 +43,8 @@ typedef enum {WON, LOST, INPROGRESS} Status;
 /************************************************************************
  * Function declarations/prototypes										*
  ************************************************************************/
+void printColored(Cell);
+
 void displayMenu();
 
 int getBoardSize();
@@ -290,24 +305,55 @@ void displayBoard(int size, Cell board[][size], bool displayMines) {
 	//Print top row, displaying column numbers
 	printf("\t");
 	for (int i=1; i <= size; i++)
-		printf("\x1b[35;1m%d\t",i);
+		printf(RCN_COLOR "%d\t" CLE_COLOR,i);
 	
-	printf("\x1b[39;49m\n");
+	printf("\n");
 	//print row numbers and rest of board
 	for (int i=0; i < size; i++){
 		//Stuff is getting colored lulz
-		printf("\x1b[35;1m%d\t\x1b[39;49m",i+1);
+		printf(RCN_COLOR "%d\t" CLE_COLOR,i+1);
 		for (int j=0; j < size; j++){
 			if(board[i][j].is_mine && displayMines)
-				printf("\x1b[31;1m*\x1b[39;49m\t");
+				printf(MIN_COLOR "*\t" CLE_COLOR);
 			else if (board[i][j].visible)
-				printf("\x1b[33;1m%d\x1b[39;49m\t",board[i][j].mines);
+				printColored(board[i][j]);
 			else
 				printf("?\t");
 		}	
 		printf("\n");
 	}
-	
+}
+
+void printColored(Cell board){
+	switch(board.mines){
+		case 0:
+			printf(ZER_COLOR "%d\t" CLE_COLOR, 0);
+			break;
+		case 1:
+			printf(ONE_COLOR "%d\t" CLE_COLOR, 1);
+			break;
+		case 2:
+			printf(TWO_COLOR "%d\t" CLE_COLOR, 2);
+			break;
+		case 3:
+			printf(THR_COLOR "%d\t" CLE_COLOR, 3);
+			break;
+		case 4:
+			printf(FOU_COLOR "%d\t" CLE_COLOR, 4);
+			break;
+		case 5:
+			printf(FIV_COLOR "%d\t" CLE_COLOR, 5);
+			break;
+		case 6:
+			printf(SIX_COLOR "%d\t" CLE_COLOR, 6);
+			break;
+		case 7:
+			printf(SEV_COLOR "%d\t" CLE_COLOR, 7);
+			break;
+		case 8:
+			printf(EIG_COLOR "%d\t" CLE_COLOR, 8);
+			break;
+	}
 }
 
 /************************************************************************
