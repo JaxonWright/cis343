@@ -1,3 +1,8 @@
+/**
+ * CIS 343 Project 2 - Matrix
+ * Jaxon Wright & Chad Teitsma
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -43,7 +48,7 @@ int getValueAt(Matrix *m, int row, int column) {
  * zero.																	*
  ***************************************************************************/
 void setValueAt(Matrix *m, int row, int column, int value) {
-	if(m->rows-1 < row || m->columns-1 < column || row <0 || column <0){
+	if(m->rows-1 < row || m->columns-1 < column || row <0 || column <0) {
 	    printf("invalid values input\n");
 	    return;
 	} else {
@@ -107,6 +112,7 @@ Matrix *subtract(Matrix *m1, Matrix *m2) {
  * DO NOT modify the input matrix.											*
  ***************************************************************************/
 Matrix *transpose(Matrix *m) {
+	
 	Matrix *result = create(m->columns, m->rows);
 	
 	for (int i = 0; i < result->rows; i++) {
@@ -125,6 +131,7 @@ Matrix *transpose(Matrix *m) {
  * DO NOT modify the input matrix.											*
  ***************************************************************************/
 Matrix *scalarMultiply(Matrix *m, int scalar) {
+	
 	Matrix *result = create(m->rows, m->columns);
 	
 	for (int i = 0; i < result->rows; i++) {
@@ -144,8 +151,8 @@ Matrix *scalarMultiply(Matrix *m, int scalar) {
  * If the input matrices are not compatible, return NULL.					*
  * DO NOT modify the input matrices.										*
  ***************************************************************************/
-Matrix *multiply(Matrix *m1, Matrix *m2)
-{
+Matrix *multiply(Matrix *m1, Matrix *m2) {
+	
 	if(m1->columns != m2->rows)
     	return NULL;
   
@@ -163,7 +170,6 @@ Matrix *multiply(Matrix *m1, Matrix *m2)
 			temp = 0;
 		}
 	}
-
 
 	return result;
 }
