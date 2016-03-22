@@ -135,20 +135,16 @@ AryElement *buildAnagramArray(char *infile, int *aryLen){
 		}
 		if(foundAnagram == false){
 			//there are no anagram matches for the current word. Create a new array element.
-			AryElement *newElem = malloc(sizeof(AryElement));
-			newElem->size = 1;
-			newElem->head = createNode(word);
-			ary[nbrUsedInAry] = *newElem;
+			//AryElement *newElem = malloc(sizeof(AryElement));
+			ary[nbrUsedInAry].size = 1;
+			ary[nbrUsedInAry].head = createNode(word);
 			nbrUsedInAry++;
 		}
 	} //done scanning words from file
 	
-	//free unused space that was allocated for the array
-	//for(int k = nbrUsedInAry; k<curAryLen; k++){
-	//	AryElement *ptr = &ary[k];
-	//	free(ptr);
-	//}
-	
+	//get rid of unused memory in array
+	ary = realloc(ary,sizeof(AryElement)*nbrUsedInAry);
+	//printf("Used %d out of %d total\n", nbrUsedInAry, curAryLen);
 	fclose(fp);
 	
 	*aryLen = nbrUsedInAry;
