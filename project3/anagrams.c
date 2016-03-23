@@ -168,7 +168,7 @@ void printAnagramArray(char *outfile, AryElement *ary, int aryLen){
 	//printf("Array is length: %d\n",aryLen);
 	for(int i = 0;i<aryLen;i++){
 		//only look at elements that have more than 2 words
-		if(ary[i].size > 2){
+		if(ary[i].size >= 2){
 			
 			if(firstnl == true){
 				fprintf(fp, "\n");

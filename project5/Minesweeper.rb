@@ -15,6 +15,18 @@ module Constants
   BOARD_SIZE_MAX = 15
   PCT_MINES_MIN = 10
   PCT_MINES_MAX = 70
+  RCN_COLOR	= "\033[38;5;245m"
+  MIN_COLOR	= "\033[38;5;160m"
+  ZER_COLOR = "\033[38;5;248m"
+  ONE_COLOR	= "\033[38;5;98m"
+  TWO_COLOR = "\033[38;5;70m"
+  THR_COLOR	= "\033[38;5;209m"
+  FOU_COLOR = "\033[38;5;111m"
+  FIV_COLOR	= "\033[38;5;209m"
+  SIX_COLOR	= "\033[38;5;153m"
+  SEV_COLOR	= "\033[38;5;115m"
+  EIG_COLOR	= "\033[38;5;134m"
+  CLE_COLOR	= "\x1b[39;49m"
 end
 
 #
@@ -134,7 +146,16 @@ end
 # main method that provides the user interface to the game
 #
 def main
-  print "!!!!!WELCOME TO THE MINESWEEPER GAME!!!!!\n\n"
+    print Constants::ONE_COLOR
+    print "************************************************************************************************************************\n"
+    print "* _|      _|  _|_|_|  _|      _|  _|_|_|_|    _|_|_|  _|          _|  _|_|_|_|  _|_|_|_|  _|_|_|    _|_|_|_|  _|_|_|   *\n"
+    print "* _|_|  _|_|    _|    _|_|    _|  _|        _|        _|          _|  _|        _|        _|    _|  _|        _|    _| *\n"
+    print "* _|  _|  _|    _|    _|  _|  _|  _|_|_|      _|_|    _|    _|    _|  _|_|_|    _|_|_|    _|_|_|    _|_|_|    _|_|_|   *\n"
+    print "* _|      _|    _|    _|    _|_|  _|              _|    _|  _|  _|    _|        _|        _|        _|        _|    _| *\n"
+    print "* _|      _|  _|_|_|  _|      _|  _|_|_|_|  _|_|_|        _|  _|      _|_|_|_|  _|_|_|_|  _|        _|_|_|_|  _|    _| *\n"
+    print "* a game by jaxon wright and chad teitsma....this time in ruby!                                                        *\n"
+    print "************************************************************************************************************************\n\n"
+    print Constants::CLE_COLOR
   display_mines = false
   game_state = Constants::INPROGRESS
   
