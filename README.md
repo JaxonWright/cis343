@@ -19,4 +19,4 @@ Output1.txt is the expected output when using dictionary1.txt as the source
 ### Project 4
 Matrix class programmed in Ruby
 ### Project 5
-Minesweeper game programmed in C 
+Minesweeper game programmed in Ruby
