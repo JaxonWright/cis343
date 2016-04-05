@@ -211,15 +211,18 @@ class Minesweeper
   def to_s(display_mines=false)
     str = ""
     for i in 0...@board_size
+      str << Constants::RCN_COLOR
       str << (i == 0 ? sprintf("%6d",i+1) : sprintf("%3d",i+1))
     end
-    str << "\n"
+    str << Constants::CLE_COLOR + "\n"
     
     for i in 0...@board_size
+      str << Constants::RCN_COLOR
       str << sprintf("%3d",i+1)
+      str << Constants::CLE_COLOR
       for j in 0...@board_size
         if @board[i][j].visible
-          str << (@board[i][j].is_mine ? sprintf("  *") : sprintf("%3d", @board[i][j].nbr_mines))
+          str << (@board[i][j].is_mine ? sprintf("  *") : print_colored(@board[i][j].nbr_mines))
         else
           str << (display_mines && @board[i][j].is_mine ? sprintf("  *") : sprintf("  ?"))
         end
@@ -228,6 +231,30 @@ class Minesweeper
     end
     
     str
+  end
+  
+  # returns colorized string
+  def print_colored(nbr_mines)
+    case nbr_mines
+    when 0
+      return Constants::ZER_COLOR + "  0" + Constants::CLE_COLOR
+    when 1
+      return Constants::ONE_COLOR + "  1" + Constants::CLE_COLOR
+    when 2
+      return Constants::TWO_COLOR + "  2" + Constants::CLE_COLOR
+    when 3
+      return Constants::THR_COLOR + "  3" + Constants::CLE_COLOR
+    when 4
+      return Constants::FOU_COLOR + "  4" + Constants::CLE_COLOR
+    when 5
+      return Constants::FIV_COLOR + "  5" + Constants::CLE_COLOR
+    when 6
+      return Constants::SIX_COLOR + "  6" + Constants::CLE_COLOR
+    when 7
+      return Constants::SEV_COLOR + "  7" + Constants::CLE_COLOR
+    when 8
+      return Constants::EIG_COLOR + "  8" + Constants::CLE_COLOR
+    end
   end
   
   # make these methods private
