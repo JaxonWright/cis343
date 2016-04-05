@@ -20,7 +20,17 @@ class Matrix
   #     parameters rows or columns or val is not of type Fixnum
   #     value of rows or columns is <= 0
   def initialize(rows=5, columns=5, val=0)
-
+    if(rows < 1 || columns < 1) ||
+      (rows.type != Fixnum || columns.type != Fixnum || val.type != Fixnum)
+      # TODO raise ArgumentError Exception
+    end
+    self.rows=(rows)
+    self.columns=(columns)
+    for i in 0...rows
+      for j in 0...columns
+        # TODO set every element to val
+      end
+    end
   end
 
   # method that returns matrix element at location (i,j)
