@@ -72,36 +72,100 @@ class Minesweeper
   
   # places mines randomly on the board
   def place_mines_on_board
-    
+    count = 0
+    while count < @nbr_mines
+      x = Random.rand(@board_size) 
+      y = Random.rand(@board_size)
+      
+      if !@board[x][y].is_mine
+        @board[x][y].is_mine = true
+        count += 1
+      end
+    end
   end
   
   # for each non-mine cell on the board, set @nbr_mines of each Cell on the board
   # to the number of mines in the immediate neighborhood.
   def fill_in_minecount_for_non_mine_cells
-    
+    for i in 0...@board_size
+      for j in 0...@board_size
+        if !@board[i][j].is_mine
+          @board[i][j].nbr_mines = get_nbr_neighbor_mines(i,j)
+        end
+      end
+    end
   end
     
   # processes cell selection by user during the game
   # returns Constants::WON, Constants::LOST, or Constants::INPROGRESS
   def select_cell(row,col)
+    @board[row][col].visible = true
     
+    if @board[row][col].is_mine
+      return Constants::LOST
+    end
+    if @board[row][col].nbr_mines == 0
+      set_all_neighbor_cells_visible(row,col)
+    end
+    if @nbr_mines + nbr_visible_cells == @board_size*@board_size
+      return Constants::WON
+    end
+    
+    return Constants::INPROGRESS
   end
   
   # returns the number of mines in the immediate neighborhood of a cell
   # at location (row,col) on the board.
   def get_nbr_neighbor_mines(row,col)
-
+    count = 0
+    
+    #check left
+  	if col > 0 && @board[row][col-1].is_mine
+  		count += 1
+  	end
+  	#check diag up left
+  	if (col > 0 && row > 0) && @board[row-1][col-1].is_mine
+  		count += 1
+  	end
+  	#check above
+  	if (row > 0 && @board[row-1][col].is_mine)
+  		count += 1
+  	end
+  	#check diag up right
+  	if (row > 0 && col < @board_size-1) && @board[row-1][col+1].is_mine
+  		count += 1
+  	end
+  	#check right
+  	if col < @board_size-1 && @board[row][col+1].is_mine 
+  		count += 1
+  	end
+  	#check diag down right
+  	if (row < @board_size-1 && col < @board_size-1) && @board[row+1][col+1].is_mine
+  		count += 1
+  	end
+  	#check below
+  	if row < @board_size-1 && @board[row+1][col].is_mine
+  		count += 1
+  	end
+  	#check diag down left
+  	if (row < @board_size-1 && col > 0) && @board[row+1][col-1].is_mine
+  		count += 1
+  	end
+  	return count
   end
   
   # returns the number of cells that are currently visible on the board
   def nbr_visible_cells
-
-  end
-  
-  # if the mine count of a cell at location (row,col) is zero, then make
-  # the cells ONLY in the immediate neighborhood visible.
-  def set_immediate_neighbor_cells_visible(row,col)
+    count = 0
     
+    for i in 0...@board_size
+      for j in 0...@board_size
+        if @board[i][j].visible
+          count += 1
+        end
+      end
+    end
+    return count
   end
   
   # if the mine count of a cell at location (row,col) is zero, then make 
@@ -109,7 +173,38 @@ class Minesweeper
   # process for each of the cells in this set of cells that have a mine
   # count of zero, and so on.
   def set_all_neighbor_cells_visible(row,col)
-    
+    #check left
+    if col > 0 && !@board[row][col-1].visible
+    	select_cell(row, col-1)
+    end
+    #check diag up left
+    if (col > 0 && row > 0) && @board[row-1][col-1].visible
+    	select_cell(row-1, col-1)
+    end
+    #check above
+    if (row > 0 && !@board[row-1][col].visible)
+    	select_cell(row-1, col)
+    end
+    #check diag up right
+    if ((row > 0 && col < @board_size-1) && !@board[row-1][col+1].visible)
+    	select_cell(row-1, col+1)
+    end
+    #check right
+    if (col < @board_size-1 && !@board[row][col+1].visible)
+    	select_cell(row, col+1)
+    end
+    #check diag down right
+    if ((row < @board_size-1 && col < @board_size-1) && !@board[row+1][col+1].visible)
+    	select_cell(row+1, col+1)
+    end
+    #check below
+    if (row < @board_size-1 && !@board[row+1][col].visible)
+    	select_cell(row+1, col)
+    end
+    #check diag down left
+    if ((row < @board_size-1 && col > 0) && !@board[row+1][col-1].visible)
+    	select_cell(row+1, col-1)
+    end
   end
   
   # returns a string representation of the board
@@ -137,8 +232,8 @@ class Minesweeper
   
   # make these methods private
   private :place_mines_on_board, :fill_in_minecount_for_non_mine_cells,
-        :get_nbr_neighbor_mines, :nbr_visible_cells,
-        :set_immediate_neighbor_cells_visible, :set_all_neighbor_cells_visible
+        :get_nbr_neighbor_mines, :nbr_visible_cells, 
+        :set_all_neighbor_cells_visible
 
 end
 
@@ -230,27 +325,27 @@ def display_menu
 end
 
 #
-# Prompts the user for board size, reads and validates the input
+# Prompts the user for board @board_size, reads and validates the input
 # entered, and returns the integer if it is within valid range.
 # repeats this in a loop until the user enters a valid value.
 #
 def get_board_size
-  size = 0
-  while size < Constants::BOARD_SIZE_MIN || size > Constants::BOARD_SIZE_MAX do
-    print "Enter board size (#{Constants::BOARD_SIZE_MIN} .. #{Constants::BOARD_SIZE_MAX}): "
-    size = STDIN.gets.strip.to_i
-    if (size < Constants::BOARD_SIZE_MIN || size > Constants::BOARD_SIZE_MAX) 
-      puts "Invalid board size. Try again."
+  @board_size = 0
+  while @board_size < Constants::BOARD_SIZE_MIN || @board_size > Constants::BOARD_SIZE_MAX do
+    print "Enter board @board_size (#{Constants::BOARD_SIZE_MIN} .. #{Constants::BOARD_SIZE_MAX}): "
+    @board_size = STDIN.gets.strip.to_i
+    if (@board_size < Constants::BOARD_SIZE_MIN || @board_size > Constants::BOARD_SIZE_MAX) 
+      puts "Invalid board @board_size. Try again."
     end
   end
-  size
+  @board_size
 end
 
 #
 # Prompts the user for percentage of mines to place on the board,
 # reads and validates the input entered, and returns the integer if it
 # is within valid range. repeats this in a loop until the user enters
-# a valid value for board size.
+# a valid value for board @board_size.
 #
 def get_percent_mines
   percent_mines = 0
