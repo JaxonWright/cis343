@@ -21,16 +21,12 @@ class Matrix
   #     value of rows or columns is <= 0
   def initialize(rows=5, columns=5, val=0)
     if(rows < 1 || columns < 1) ||
-      (rows.type != Fixnum || columns.type != Fixnum || val.type != Fixnum)
-      # TODO raise ArgumentError Exception
+      (rows.class != Fixnum || columns.class != Fixnum || val.class != Fixnum)
+        raise ArgumentError.new("Rows and Columns must be > 0. Only numbers are allowed")
     end
     self.rows=(rows)
     self.columns=(columns)
-    for i in 0...rows
-      for j in 0...columns
-        # TODO set every element to val
-      end
-    end
+    @data = Array.new(rows*columns,val)
   end
 
   # method that returns matrix element at location (i,j)
@@ -39,7 +35,10 @@ class Matrix
   #     parameters i or j is not of type Fixnum
   #     value of i or j is outside the bounds of Matrix
   def get(i, j)
-
+    raise ArgumentError.new("i and j must be numbers") unless i.class == Fixnum && j.class == Fixnum
+    raise ArgumentError.new("outside of matrix bounds") unless i<@rows && j<@columns && i>=0 && j>=0
+    
+    return @data[i*@columns + j]
   end
 
   # method to set the value of matrix element at location (i,j) to value of parameter val
@@ -48,39 +47,88 @@ class Matrix
   #     parameters i or j or val is not of type Fixnum
   #     the value of i or j is outside the bounds of Matrix
   def set(i, j, val)
+    raise ArgumentError.new("i and j must be numbers") unless i.class == Fixnum && j.class == Fixnum
+    raise ArgumentError.new("outside of matrix bounds") unless i<@rows && j<@columns && i>=0 && j>=0
 
+    @data[i*@columns + j] = val
   end
 
   # method that returns a new matrix object that is the sum of this and parameter matrices.
   # raise ArgumentError exception if the parameter m is not of type Matrix
   # raise IncompatibleMatricesError exception if the matrices are not compatible for addition operation
   def add(m)
-
+    raise ArgumentError.new("must pass in a matrix") unless m.class == Matrix
+    raise IncompatibleMatricesError.new("matrices must be the same size to add") unless m.rows == @rows && m.columns == @columns
+    
+    added = Matrix.new(@rows,@columns)
+    for i in 0...@rows
+      for j in 0...@columns
+        added.set(i,j,self.get(i,j)+m.get(i,j))
+      end
+    end
+    return added
   end
 
   # method that returns a new matrix object that is the difference of this and parameter matrices
   # raise ArgumentError exception if the parameter m is not of type Matrix
   # raise IncompatibleMatricesError exception if the matrices are not compatible for subtraction operation
   def subtract(m)
-
+    raise ArgumentError.new("must pass in a matrix") unless m.class == Matrix
+    raise IncompatibleMatricesError.new("matrices must be the same size to subtract") unless m.rows == @rows && m.columns == @columns
+    
+    subbed = Matrix.new(@rows,@columns)
+    for i in 0...@rows
+      for j in 0...@columns
+        subbed.set(i,j,self.get(i,j)-m.get(i,j))
+      end
+    end
+    return subbed
   end
 
   # method that returns a new matrix object that is a scalar multiple of source matrix object
   # raise ArgumentError exception if the parameter k is not of type Fixnum
   def scalarmult(k)
-
+    raise ArgumentError.new("must pass in a number") unless k.class == Fixnum
+    
+    scalared = Matrix.new(@rows,@columns)
+    for i in 0...@rows
+      for j in 0...@columns
+        scalared.set(i,j,self.get(i,j)*k)
+      end
+    end
+    return scalared
   end
 
   # method that returns a new matrix object that is the product of this and parameter matrices
   # raise ArgumentError exception if the parameter m is not of type Matrix
   # raise IncompatibleMatricesError exception if the matrices are not compatible for multiplication operation
   def multiply(m)
-
+    raise ArgumentError.new("must pass in a matrix") unless m.class == Matrix
+    raise IncompatibleMatricesError.new("rows and columns incompatible") unless @columns == m.rows
+    
+    multiplied = Matrix.new(@rows,m.columns)
+    temp = 0
+    for i in 0...@rows
+      for j in 0...m.columns
+        for k in 0...@columns
+          temp += self.get(i,k) * m.get(k,j)
+        end
+        multiplied.set(i,j,temp)
+        temp = 0
+      end
+    end
+    return multiplied
   end
 
   # method that returns a new matrix object that is the transpose of the source matrix
   def transpose
-
+    transposed = Matrix.new(@columns,@rows)
+    for i in 0...transposed.rows
+      for j in 0...transposed.columns
+        transposed.set(i,j,self.get(j,i))
+      end
+    end
+    return transposed
   end
 
   # overload + for matrix addition
@@ -103,14 +151,24 @@ class Matrix
   #     parameter size is not of type Fixnum
   #     the value of size <= 0
   def Matrix.identity(size)
-
+    raise ArgumentError.new("must pass in a number > 0") unless size.class == Fixnum && size > 0
+    
+    iden = Matrix.new(size,size)
+    for i in 0...iden.rows
+      for j in 0...iden.columns
+        if i == j
+          iden.set(i,j,1)
+        end
+      end
+    end
+    return iden
   end
 
   # method that sets every element in the matrix to value of parameter val
   # raise ArgumentError exception if val is not of type Fixnum
   # hint: use fill() method of Array to fill the matrix
   def fill(val)
-
+    
   end
 
   # method that return a deep copy/clone of this matrix object
@@ -128,13 +186,25 @@ class Matrix
 
   # method that returns a string representation of matrix data in table (row x col) format
   def to_s
-
+    str = ""
+    for i in 0...@rows
+      for j in 0...@columns
+        str << get(i,j).to_s << " "
+      end
+      str << "\n"
+    end
+    str << "\n"
+    return str
   end
 
   # method that for each element in the matrix yields with information
   # on row, column, and data value at location (i,j)
   def each
-
+    for i in 0...@rows
+      for j in 0...@columns
+        yield(i,j,get(i,j))
+      end
+    end
   end
   
 end
@@ -247,4 +317,4 @@ def main
 end
 
 # uncomment the following line to run the main() method
-# main()
+main()
