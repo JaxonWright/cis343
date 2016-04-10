@@ -168,12 +168,21 @@ class Matrix
   # raise ArgumentError exception if val is not of type Fixnum
   # hint: use fill() method of Array to fill the matrix
   def fill(val)
+    raise ArgumentError.new("must pass in a number") unless val.class == Fixnum
     
+    @data.fill(val)
   end
 
   # method that return a deep copy/clone of this matrix object
   def clone
-
+    cloned = Matrix.new(@rows,@columns)
+    
+    for i in 0...cloned.rows
+      for j in 0...cloned.columns
+        cloned.set(i,j,self.get(i,j))
+      end
+    end
+    return cloned
   end
 
   # method that returns true if this matrix object and the parameter matrix object are equal
@@ -181,7 +190,18 @@ class Matrix
   # matrices are equal). Otherwise, it returns false.
   # returns false if the parameter m is not of type Matrix
   def ==(m)
-
+    if m.class != Matrix || @rows != m.rows || @columns != m.columns
+      return false
+    end
+    
+    for i in 0...@rows
+      for j in 0...@columns
+        if self.get(i,j) != m.get(i,j)
+          return false
+        end
+      end
+    end
+    return true
   end
 
   # method that returns a string representation of matrix data in table (row x col) format
@@ -189,7 +209,10 @@ class Matrix
     str = ""
     for i in 0...@rows
       for j in 0...@columns
-        str << get(i,j).to_s << " "
+        str << get(i,j).to_s
+        if j != @columns - 1
+          str << " "
+        end
       end
       str << "\n"
     end
