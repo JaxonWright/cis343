@@ -87,8 +87,33 @@ class Minesweeper:
     
     # returns a string representation of the board
     def to_string(self,display_mines):
-        #TODO
-        return
+        result = ""
+        
+        #top row
+        for i in range(self.board_size):
+            if i == 0:
+                result += "   "
+            result += "  " + str(i+1)
+        result += "\n"
+            
+        #the rest    
+        for i in range(self.board_size):
+            #row label
+            result += "  " + str(i+1)
+            for j in range(self.board_size):
+                if self.board[i][j].visible:
+                    if self.board[i][j].is_mine:
+                        result += "  *"
+                    else:
+                        result += self.board[i][j].nbr_mines
+                else:
+                    if display_mines and self.board[i][j].is_mines:
+                        result += "  *"
+                    else:
+                        result += "  ?"
+            result += "\n"
+            
+        return result
 
 
 def get_board_size():
@@ -116,6 +141,9 @@ def main():
     board_size = get_board_size()
     percent_mines = get_percent_mines()
     board = Minesweeper(board_size,percent_mines)
+    
+    #testing
+    print board.to_string(False)
     
     #TODO
     
