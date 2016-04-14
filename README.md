@@ -20,3 +20,5 @@ Output1.txt is the expected output when using dictionary1.txt as the source
 Matrix class programmed in Ruby
 ### Project 5
 Minesweeper game programmed in Ruby
+### Project 6
+Minesweeper game programmed in Python
