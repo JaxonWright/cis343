@@ -3,7 +3,7 @@
 #
 #  Author(s): Jaxon Wright and Chad Teitsma
 #
-
+import random
 
 # Constants
 WON = 0
